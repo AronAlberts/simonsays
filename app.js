@@ -213,12 +213,13 @@ const changeOscType = () => {
 };
 
 let gameState = null
-
 const synth = new Tone.Synth({
     oscillator: {
         type: "sine"
     }
 }).toDestination();
+
+disablePlayButtons();
 window.onload = async () => {
     gameState = await putGameState();
     console.log("Game state fetched on page load:", gameState);
