@@ -64,9 +64,9 @@ const playSequence = async (arr, synth) => {
         setTimeout(() => {
             synth.triggerAttackRelease(noteMap[padToClick.id], "8n");
         }, 0);
-        padToClick.classList.add("active-effect");
+        padToClick.classList.add("active");
         await new Promise(resolve => setTimeout(resolve, 500)); // wait for 500ms
-        padToClick.classList.remove("active-effect");
+        padToClick.classList.remove("active");
         console.log(arr[i] + " pad clicked");
         await new Promise(resolve => setTimeout(resolve, 500)); // wait for 500ms before playing the next sound
     }
@@ -108,6 +108,10 @@ const recordInput = (lenSequence) => {
         let count = 0
 
         document.getElementById("pad-blue").addEventListener("click", () =>{
+            document.getElementById("pad-blue").classList.add("active")
+            setTimeout(() => {
+                document.getElementById("pad-blue").classList.remove("active")
+            }, 400);
             userSequence.push("blue")
             count++
             if (count === lenSequence) {
@@ -116,6 +120,10 @@ const recordInput = (lenSequence) => {
         })
         document.getElementById("pad-yellow").addEventListener("click", () =>{
             userSequence.push("yellow")
+            document.getElementById("pad-yellow").classList.add("active")
+            setTimeout(() => {
+                document.getElementById("pad-yellow").classList.remove("active")
+            }, 400);
             count++
             if (count === lenSequence) {
                 resolve(userSequence)
@@ -123,6 +131,10 @@ const recordInput = (lenSequence) => {
         })
         document.getElementById("pad-green").addEventListener("click", () =>{
             userSequence.push("green")
+            document.getElementById("pad-green").classList.add("active")
+            setTimeout(() => {
+                document.getElementById("pad-green").classList.remove("active")
+            }, 400);
             count++
             if (count === lenSequence) {
                 resolve(userSequence)
@@ -130,6 +142,10 @@ const recordInput = (lenSequence) => {
         })
         document.getElementById("pad-red").addEventListener("click", () =>{
             userSequence.push("red")
+            document.getElementById("pad-red").classList.add("active")
+            setTimeout(() => {
+                document.getElementById("pad-red").classList.remove("active")
+            }, 400);
             count++
             if (count === lenSequence) {
                 resolve(userSequence)

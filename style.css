@@ -20,13 +20,13 @@ body {
   font-size: 2.5vw;
 }
 
-.pad:enabled:active {
+/* .pad:enabled:active {
   filter: brightness(0.5);
   transform: scale(1.1);
   transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
-}
+} */
 
-.pad.active-effect {
+.pad.active {
   filter: brightness(0.5);
   transform: scale(1.1);
   transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
