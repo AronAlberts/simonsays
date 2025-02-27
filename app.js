@@ -15,18 +15,26 @@ const putGameState = async () => {
     // This code is always executed, independent of whether the request succeeds or fails.
 };
 
+/**
+ * This is the main game function, it plays the sequence of pad clicks for the user,
+ * then waits for the user to repeat the sequence before sending it to the backend for validation.
+ * this loop continues on forever, allowing the user to play the game as long as they want to.
+ * @param {object} gameState - The current gamestate retrieved from the backend
+ * @param {object} synth - The synth to be able to play notes for pad clicks
+ */
 const startGame = async (gameState, synth) => {
     enableButtons();
     document.getElementById("replay-btn").addEventListener("click", async () => {
         await playSequence(gameState.gameState.sequence, synth);
-    });
+    });     // When the replay button is clicked, the sequence plays again
 
     while (true) {
-        let sequence = gameState.gameState.sequence
-        let highScore = gameState.gameState.highScore
-        let level = gameState.gameState.level
+        const sequence = gameState.gameState.sequence
+        const highScore = gameState.gameState.highScore
+        const level = gameState.gameState.level
         displayHighScore(highScore)
         displayLevel(level)
+        // small pause after changing the level and high score
         await new Promise(resolve => setTimeout(resolve, 500));
         console.log("high score " + highScore)
         console.log("current level " + level)
@@ -38,13 +46,15 @@ const startGame = async (gameState, synth) => {
     }
 };
 
+/**
+ * This function plays the sequence for the user with a reasonable interval.
+ * Also playing a distinct note for each color pad clicked.
+ * @param {Array} arr - Array containing the correct sequence
+ * @param {object} synth - Synth object for playing notes
+ */
 const playSequence = async (arr, synth) => {
     disablePlayButtons()
     console.log(arr)
-    // const yellowPad = document.getElementById("pad-yellow");
-    // const bluePad = document.getElementById("pad-blue");
-    // const redPad = document.getElementById("pad-red");
-    // const greenPad = document.getElementById("pad-green");
     const noteMap = {
         "pad-yellow": "D4", "pad-blue": "F4", "pad-red": "C4", "pad-green": "E4"
     }
@@ -62,6 +72,9 @@ const playSequence = async (arr, synth) => {
     enableButtons()
 };
 
+/**
+ * Enables the play buttons once the start button has been pressed.
+ */
 const enableButtons = () => {
     document.getElementById("replay-btn").disabled = false;
     document.getElementById("start-btn").disabled = true;
@@ -70,6 +83,9 @@ const enableButtons = () => {
     });
 };
 
+/**
+ * Disables play buttons and replay button.
+ */
 const disablePlayButtons = () => {
     document.getElementById("replay-btn").disabled = true;
     document.querySelectorAll(".pad").forEach(pad => {
@@ -77,6 +93,13 @@ const disablePlayButtons = () => {
     });
 };
 
+/**
+ * Waits for user to press pads and records what pad was last pressed in an array.
+ * once the length of the user sequence is equal to the generated sequence, we
+ * return from this function
+ * @param {number} lenSequence - Length of generated sequence
+ * @returns {Array} - User sequence array
+ */
 const recordInput = (lenSequence) => {
     console.log("current sequence length: " + lenSequence)
     return new Promise((resolve) => {
@@ -114,6 +137,13 @@ const recordInput = (lenSequence) => {
     })
 };
 
+/**
+ * Sends the user sequence to the backend for validation, if successful, it returns the updated
+ * game state for the next level, if not it displays a game over window and resets and returns
+ * the game state
+ * @param {Array} seq  - user sequence array
+ * @returns {object} - Updated game state
+ */
 const postGameState = async (seq) => {
     const url = "http://localhost:3000/api/v1/game-state/sequence";
     const sequence = {"sequence": seq};
@@ -131,6 +161,10 @@ const postGameState = async (seq) => {
     }
 };
 
+/**
+ * Displays a game over modal window to the user, and waits for the user to click the
+ * reset button
+ */
 const gameOver = async () => {
     const modal = document.querySelector(".modal");
     const resetBtn = document.getElementById("reset-btn");
@@ -150,14 +184,26 @@ const gameOver = async () => {
     });
 };
 
+/**
+ * Displays the users high score
+ * @param {number} highScore  - High score in current gamestate
+ */
 const displayHighScore = (highScore) => {
     document.getElementById("high-score").innerHTML = highScore;
 };
 
+/**
+ * Displays current game level
+ * @param {number} level - Level of current game state
+ */
 const displayLevel = (level) => {
     document.getElementById("level-indicator").innerHTML = level;
 };
 
+/**
+ * Adds event listeners for each pad and plays a distinct note for each pad when pressed
+ * @param {object} synth - Synth object to play tones
+ */
 const playTone = (synth) => {
     const yellowPad = document.getElementById("pad-yellow");
     const bluePad = document.getElementById("pad-blue");
@@ -178,6 +224,10 @@ const playTone = (synth) => {
     });
 };
 
+/**
+ * Maps qwas keys to their respective pad according to the HTML to be able to simulate
+ * a pad press for each key press
+ */
 const keyPadMap = () => {
     const redPad = document.getElementById("pad-red");
     const greenPad = document.getElementById("pad-green");
@@ -203,6 +253,10 @@ const keyPadMap = () => {
     });
 };
 
+/**
+ * Event listener for the dropdown menu to be able to change the oscillator type
+ * of the synth for each respective value in the menu.
+ */
 const changeOscType = () => {
     const dropdown = document.getElementById("sound-select");
 
