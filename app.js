@@ -132,10 +132,13 @@ const postGameState = async (seq) => {
 };
 
 const gameOver = async () => {
-    const modal = document.getElementById("failure-modal");
+    const modal = document.querySelector(".modal");
     const resetBtn = document.getElementById("reset-btn");
 
-    modal.style.display = "block";
+    console.log(modal)
+    console.log(resetBtn)
+
+    modal.style.display = "flex";
 
     return new Promise(resolve => {
         const handleClick = () => {
