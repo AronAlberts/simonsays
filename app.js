@@ -24,9 +24,10 @@ const putGameState = async () => {
  */
 const startGame = async (gameState, synth) => {
     enableButtons();
+    // When the replay button is clicked, the sequence plays again
     document.getElementById("replay-btn").addEventListener("click", async () => {
         await playSequence(gameState.gameState.sequence, synth);
-    });     // When the replay button is clicked, the sequence plays again
+    });
 
     while (true) {
         const sequence = gameState.gameState.sequence
