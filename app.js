@@ -225,4 +225,3 @@ document.getElementById("start-btn").addEventListener("click", () => startGame(g
 keyPadMap();
 playTone(synth);
 changeOscType();
-a
