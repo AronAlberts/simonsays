@@ -39,7 +39,6 @@ const startGame = async (gameState, synth) => {
         await new Promise(resolve => setTimeout(resolve, 500));
         await playSequence(sequence, synth);
         const userSequence = await recordInput(sequence.length);
-        console.log("user sequence: " + userSequence);
         await new Promise(resolve => setTimeout(resolve, 1000));
         gameState = await postGameState(userSequence);
     }
@@ -57,7 +56,6 @@ const playSequence = async (arr, synth, index=0) => {
         return;
     }
     disablePlayButtons()
-    console.log(arr)
     const noteMap = {
         "pad-yellow": "D4", "pad-blue": "F4", "pad-red": "C4", "pad-green": "E4"
     }
@@ -69,7 +67,6 @@ const playSequence = async (arr, synth, index=0) => {
         padToClick.classList.remove("active");
     }, 400);
     setTimeout(() => {
-        console.log(color + "pad clicked");
         playSequence(arr, synth, index + 1)
     }, 1000);
 
@@ -104,7 +101,6 @@ const disablePlayButtons = () => {
  * @returns {Array} - User sequence array
  */
 const recordInput = (lenSequence) => {
-    console.log("current sequence length: " + lenSequence)
     return new Promise((resolve) => {
         const userSequence = []
         let count = 0
@@ -192,10 +188,9 @@ const postGameState = async (seq) => {
 
     try {
         const response = await axios.post(url, sequence);
-        console.log("updated game state " + response.data);
         return response.data
     } catch (error) {
-        console.log("incorrect user sequence");
+        console.log(error);
         await gameOver();
         gameState = await putGameState();
         return gameState;
@@ -272,7 +267,6 @@ const changeOscType = () => {
 
     dropdown.addEventListener("change", (event) => {
         synth.oscillator.type = event.target.value;
-        console.log("Oscillator type changed to" + synth.oscillator.type);
     })
 };
 
@@ -286,10 +280,8 @@ const synth = new Tone.Synth({
 disablePlayButtons();
 window.onload = async () => {
     gameState = await putGameState();
-    console.log("Game state fetched on page load:", gameState);
     displayHighScore(gameState.gameState.highScore);
 };
 document.getElementById("start-btn").addEventListener("click", () => startGame(gameState, synth));
 keyPadMap();
-playTone(synth);
 changeOscType();
