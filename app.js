@@ -53,24 +53,28 @@ const startGame = async (gameState, synth) => {
  * @param {Array} arr - Array containing the correct sequence
  * @param {object} synth - Synth object for playing notes
  */
-const playSequence = async (arr, synth) => {
+const playSequence = async (arr, synth, index=0) => {
+    if (index === arr.length) {
+        enableButtons();
+        return;
+    }
     disablePlayButtons()
     console.log(arr)
     const noteMap = {
         "pad-yellow": "D4", "pad-blue": "F4", "pad-red": "C4", "pad-green": "E4"
     }
-    for (let i=0; i<arr.length; i++) {
-        const padToClick = document.getElementById(`pad-${arr[i]}`);
-        setTimeout(() => {
-            synth.triggerAttackRelease(noteMap[padToClick.id], "8n");
-        }, 0);
-        padToClick.classList.add("active");
-        await new Promise(resolve => setTimeout(resolve, 500)); // wait for 500ms
+    const color = arr[index];
+    const padToClick = document.getElementById(`pad-${color}`);
+    synth.triggerAttackRelease(noteMap[padToClick.id], "8n");
+    padToClick.classList.add("active");
+    setTimeout(() => {
         padToClick.classList.remove("active");
-        console.log(arr[i] + " pad clicked");
-        await new Promise(resolve => setTimeout(resolve, 500)); // wait for 500ms before playing the next sound
-    }
-    enableButtons()
+    }, 400);
+    setTimeout(() => {
+        console.log(color + "pad clicked");
+        playSequence(arr, synth, index + 1)
+    }, 1000);
+
 };
 
 /**
@@ -262,10 +266,6 @@ const keyPadMap = () => {
                 view: window,
             });
             padArr[index].dispatchEvent(clickEvent);
-            padArr[index].classList.add("active-effect");
-            setTimeout(() => {
-                padArr[index].classList.remove("active-effect")
-            },300);
         }
     });
 };
