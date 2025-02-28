@@ -112,6 +112,7 @@ const recordInput = (lenSequence) => {
         let count = 0
 
         document.getElementById("pad-blue").addEventListener("click", () =>{
+            synth.triggerAttackRelease("F4", "8n")
             document.getElementById("pad-blue").classList.add("active")
             setTimeout(() => {
                 document.getElementById("pad-blue").classList.remove("active")
@@ -123,6 +124,7 @@ const recordInput = (lenSequence) => {
             }
         })
         document.getElementById("pad-yellow").addEventListener("click", () =>{
+            synth.triggerAttackRelease("D4", "8n")
             userSequence.push("yellow")
             document.getElementById("pad-yellow").classList.add("active")
             setTimeout(() => {
@@ -134,6 +136,7 @@ const recordInput = (lenSequence) => {
             }
         })
         document.getElementById("pad-green").addEventListener("click", () =>{
+            synth.triggerAttackRelease("E4", "8n")
             userSequence.push("green")
             document.getElementById("pad-green").classList.add("active")
             setTimeout(() => {
@@ -145,6 +148,7 @@ const recordInput = (lenSequence) => {
             }
         })
         document.getElementById("pad-red").addEventListener("click", () =>{
+            synth.triggerAttackRelease("C4", "8n")
             userSequence.push("red")
             document.getElementById("pad-red").classList.add("active")
             setTimeout(() => {
@@ -225,25 +229,25 @@ const displayLevel = (level) => {
  * Adds event listeners for each pad and plays a distinct note for each pad when pressed
  * @param {object} synth - Synth object to play tones
  */
-const playTone = (synth) => {
-    const yellowPad = document.getElementById("pad-yellow");
-    const bluePad = document.getElementById("pad-blue");
-    const redPad = document.getElementById("pad-red");
-    const greenPad = document.getElementById("pad-green");
+// const playTone = (synth) => {
+//     const yellowPad = document.getElementById("pad-yellow");
+//     const bluePad = document.getElementById("pad-blue");
+//     const redPad = document.getElementById("pad-red");
+//     const greenPad = document.getElementById("pad-green");
 
-    yellowPad.addEventListener("click", () => {
-        synth.triggerAttackRelease("D4", "8n")
-    });
-    bluePad.addEventListener("click", () => {
-        synth.triggerAttackRelease("F4", "8n")
-    });
-    redPad.addEventListener("click", () => {
-        synth.triggerAttackRelease("C4", "8n")
-    });
-    greenPad.addEventListener("click", () => {
-        synth.triggerAttackRelease("E4", "8n")
-    });
-};
+//     yellowPad.addEventListener("click", () => {
+//         synth.triggerAttackRelease("D4", "8n")
+//     });
+//     bluePad.addEventListener("click", () => {
+//         synth.triggerAttackRelease("F4", "8n")
+//     });
+//     redPad.addEventListener("click", () => {
+//         synth.triggerAttackRelease("C4", "8n")
+//     });
+//     greenPad.addEventListener("click", () => {
+//         synth.triggerAttackRelease("E4", "8n")
+//     });
+// };
 
 /**
  * Maps qwas keys to their respective pad according to the HTML to be able to simulate
