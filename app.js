@@ -37,8 +37,6 @@ const startGame = async (gameState, synth) => {
         displayLevel(level)
         // small pause after changing the level and high score
         await new Promise(resolve => setTimeout(resolve, 500));
-        console.log("high score " + highScore)
-        console.log("current level " + level)
         await playSequence(sequence, synth);
         const userSequence = await recordInput(sequence.length);
         console.log("user sequence: " + userSequence);
@@ -111,7 +109,7 @@ const recordInput = (lenSequence) => {
         const userSequence = []
         let count = 0
 
-        document.getElementById("pad-blue").addEventListener("click", () =>{
+        const blueHandler = () =>{
             synth.triggerAttackRelease("F4", "8n")
             document.getElementById("pad-blue").classList.add("active")
             setTimeout(() => {
@@ -120,10 +118,12 @@ const recordInput = (lenSequence) => {
             userSequence.push("blue")
             count++
             if (count === lenSequence) {
+                removeListeners()
                 resolve(userSequence)
             }
-        })
-        document.getElementById("pad-yellow").addEventListener("click", () =>{
+        };
+
+        const yellowHandler = () =>{
             synth.triggerAttackRelease("D4", "8n")
             userSequence.push("yellow")
             document.getElementById("pad-yellow").classList.add("active")
@@ -132,10 +132,12 @@ const recordInput = (lenSequence) => {
             }, 400);
             count++
             if (count === lenSequence) {
+                removeListeners()
                 resolve(userSequence)
             }
-        })
-        document.getElementById("pad-green").addEventListener("click", () =>{
+        };
+
+        const greenHandler = () =>{
             synth.triggerAttackRelease("E4", "8n")
             userSequence.push("green")
             document.getElementById("pad-green").classList.add("active")
@@ -144,10 +146,12 @@ const recordInput = (lenSequence) => {
             }, 400);
             count++
             if (count === lenSequence) {
+                removeListeners()
                 resolve(userSequence)
             }
-        })
-        document.getElementById("pad-red").addEventListener("click", () =>{
+        };
+
+        const redHandler = () =>{
             synth.triggerAttackRelease("C4", "8n")
             userSequence.push("red")
             document.getElementById("pad-red").classList.add("active")
@@ -156,10 +160,23 @@ const recordInput = (lenSequence) => {
             }, 400);
             count++
             if (count === lenSequence) {
+                removeListeners()
                 resolve(userSequence)
             }
-        })
-    })
+        };
+
+        document.getElementById("pad-red").addEventListener("click", redHandler);
+        document.getElementById("pad-blue").addEventListener("click", blueHandler);
+        document.getElementById("pad-yellow").addEventListener("click", yellowHandler);
+        document.getElementById("pad-green").addEventListener("click", greenHandler);
+
+        const removeListeners = () => {
+        document.getElementById("pad-red").removeEventListener("click", redHandler);
+        document.getElementById("pad-blue").removeEventListener("click", blueHandler);
+        document.getElementById("pad-yellow").removeEventListener("click", yellowHandler);
+        document.getElementById("pad-green").removeEventListener("click", greenHandler);
+        };
+    });
 };
 
 /**
@@ -172,7 +189,6 @@ const recordInput = (lenSequence) => {
 const postGameState = async (seq) => {
     const url = "http://localhost:3000/api/v1/game-state/sequence";
     const sequence = {"sequence": seq};
-    console.log(sequence)
 
     try {
         const response = await axios.post(url, sequence);
@@ -193,10 +209,7 @@ const postGameState = async (seq) => {
 const gameOver = async () => {
     const modal = document.querySelector(".modal");
     const resetBtn = document.getElementById("reset-btn");
-
-    console.log(modal)
-    console.log(resetBtn)
-
+    disablePlayButtons()
     modal.style.display = "flex";
 
     return new Promise(resolve => {
@@ -224,30 +237,6 @@ const displayHighScore = (highScore) => {
 const displayLevel = (level) => {
     document.getElementById("level-indicator").innerHTML = level;
 };
-
-/**
- * Adds event listeners for each pad and plays a distinct note for each pad when pressed
- * @param {object} synth - Synth object to play tones
- */
-// const playTone = (synth) => {
-//     const yellowPad = document.getElementById("pad-yellow");
-//     const bluePad = document.getElementById("pad-blue");
-//     const redPad = document.getElementById("pad-red");
-//     const greenPad = document.getElementById("pad-green");
-
-//     yellowPad.addEventListener("click", () => {
-//         synth.triggerAttackRelease("D4", "8n")
-//     });
-//     bluePad.addEventListener("click", () => {
-//         synth.triggerAttackRelease("F4", "8n")
-//     });
-//     redPad.addEventListener("click", () => {
-//         synth.triggerAttackRelease("C4", "8n")
-//     });
-//     greenPad.addEventListener("click", () => {
-//         synth.triggerAttackRelease("E4", "8n")
-//     });
-// };
 
 /**
  * Maps qwas keys to their respective pad according to the HTML to be able to simulate
